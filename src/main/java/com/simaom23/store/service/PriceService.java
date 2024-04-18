@@ -2,9 +2,11 @@ package com.simaom23.store.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simaom23.store.model.Price;
@@ -14,41 +16,49 @@ import com.simaom23.store.repository.PriceRepository;
 @Service
 public class PriceService {
 
-    @Autowired
-    private PriceRepository priceRepository;
+    private final PriceRepository priceRepository;
 
-    public Response checkProduct(int product_id, int brand_id, String date) {
+    public PriceService(PriceRepository priceRepository) {
+        this.priceRepository = priceRepository;
+    }
 
-        /* Converts String to Timestamp SQL */
-        Timestamp date_conv;
+    public Optional<Response> checkPrice(int productId, int brandId, String dateString) {
+        Timestamp date = convertToDate(dateString);
+        List<Price> results = priceRepository.findAllEntries(productId, brandId, date);
+
+        if (results.isEmpty()) {
+            return Optional.empty();
+        }
+
+        BigDecimal highestPrice = results.get(0).getPrice();
+        float discount = calculateDiscount(results, highestPrice);
+
+        // Fetch values from the first result to create Response object
+        String startDate = results.get(0).getStart_date().toString();
+        String endDate = results.get(0).getEnd_date().toString();
+        String currency = results.get(0).getCurr();
+        Response response = new Response(productId, brandId, discount, startDate, endDate, highestPrice, currency);
+
+        return Optional.ofNullable(response);
+    }
+
+    // Convert Date String to Timestamp SQL
+    private Timestamp convertToDate(String dateString) {
         try {
-            date_conv = Timestamp.valueOf(date);
+            LocalDateTime localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            return Timestamp.valueOf(localDateTime);
         } catch (Exception e) {
-            return new Response();
+            throw new IllegalArgumentException("Date must be in the following format: YYYY-MM-DDThh:mm:ss");
         }
+    }
 
-        List<Price> results = priceRepository.findAllEntries(product_id, brand_id, date_conv); // Calls query to fetch
-                                                                                               // entries from H2 DB
-
-        if (results.size() == 0) // Check if query returned nothing
-            return new Response();
-
-        /* Calculates discount tax */
-        BigDecimal highest_priority = results.get(0).getPrice();
-        float discount = 0;
+    // Calculate discount percentage
+    private float calculateDiscount(List<Price> results, BigDecimal highestPrice) {
         if (results.size() > 1) {
-            float lowest_priority = results.get(1).getPrice().floatValue();
-            discount = 100 - ((highest_priority.floatValue() / lowest_priority) * 100);
+            BigDecimal lowestPrice = results.get(1).getPrice();
+            float discountPercentage = 100 - (highestPrice.floatValue() / lowestPrice.floatValue() * 100);
+            return discountPercentage;
         }
-
-        /*
-         * Fetches the values from list index 0
-         * to create Response object
-         */
-        String start_date = results.get(0).getStart_date().toString();
-        String end_date = results.get(0).getEnd_date().toString();
-        String curr = results.get(0).getCurr();
-
-        return new Response(product_id, brand_id, discount, start_date, end_date, highest_priority, curr);
+        return 0;
     }
 }

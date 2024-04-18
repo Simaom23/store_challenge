@@ -3,11 +3,11 @@ package com.simaom23.store.model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,15 +15,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/*
- * Price model, tables in H2 database are generated
- * automatically through the model's field
- */
 @Data // Generates getters and setters
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "prices")
+@Table(name = "price")
 public class Price {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")

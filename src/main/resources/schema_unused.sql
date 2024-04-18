@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS 'prices' (
+CREATE TABLE IF NOT EXISTS 'price' (
   'price_id' int AUTO_INCREMENT  PRIMARY KEY,
   'brand_id' int NOT NULL,
   'start_date' timestamp NOT NULL,
