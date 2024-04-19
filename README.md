@@ -5,16 +5,19 @@ REST Service solution with Spring for the Problem explained in the PDF.
 ## Running the Project with Maven
 
 To run the project using Maven, you can use the following command:
+
 `mvn spring-boot:run`
 
 ## Making Get Request to Prices
 
 Here's how you can make requests to the specified endpoint with the provided query parameters:
+
 `GET http://localhost:8080/get-prices?product_id={productId}&brand_id={brandId}&date={date}`
 
 - Replace {productId} with the product ID, {brandId} with the brand ID, and {date} with the ISO 8601 formatted date.
 
 For example:
+
 `GET http://localhost:8080/get-prices?product_id=35455&brand_id=1&date=2024-04-14T10:00:00`
 
 ## Calculated Discounts
