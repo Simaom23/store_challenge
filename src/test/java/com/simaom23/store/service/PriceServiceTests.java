@@ -80,8 +80,8 @@ public class PriceServiceTests {
 
                 assertTrue(response.isPresent());
 
-                Response expectedResponse = new Response(productId, brandId, 0.0f, "2020-06-14 00:00:00",
-                                "2020-12-31 23:59:59", BigDecimal.valueOf(35.50), "EUR");
+                Response expectedResponse = new Response(productId, brandId, 0.0f, "2020-06-14 00:00:00.0",
+                                "2020-12-31 23:59:59.0", BigDecimal.valueOf(35.50), "EUR");
 
                 assertEquals(expectedResponse, response.get());
         }

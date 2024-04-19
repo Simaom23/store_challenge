@@ -35,6 +35,7 @@ public class PriceService {
         String endDate = results.get(0).getEnd_date().toString();
         String currency = results.get(0).getCurr();
 
+        // Exclude first from beeing sorted
         results.remove(0);
         float discount = calculateDiscount(results, highestPriorityPrice);
 
