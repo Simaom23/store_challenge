@@ -100,18 +100,6 @@ public class PriceServiceTests {
                 assertFalse(response.isPresent());
         }
 
-        // @Test
-        // public void testSinglePriceEntry() {
-        // List<Price> prices = new ArrayList<>();
-        // prices.add(new Price(35455, 1, Timestamp.valueOf("2020-06-14 10:00:00"),
-        // Timestamp.valueOf("2020-12-31 23:59:59"), 1, BigDecimal.valueOf(35.50),
-        // "EUR"));
-
-        // float discount = priceService.calculateDiscount(prices,
-        // BigDecimal.valueOf(35.50));
-        // assertEquals(0.0f, discount);
-        // }
-
         // Method providing test data
         static Stream<Object[]> testData() {
                 return Stream.of(
