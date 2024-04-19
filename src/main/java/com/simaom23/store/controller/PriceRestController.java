@@ -24,10 +24,6 @@ public class PriceRestController {
             @RequestParam int brand_id, @RequestParam String date) {
         Optional<Response> response = priceService.checkPrice(product_id, brand_id, date);
 
-        if (response.isPresent())
-            return ResponseEntity.ok(response.get());
-
-        return ResponseEntity.ok().build();
-
+        return response.isPresent() ? ResponseEntity.ok(response.get()) : ResponseEntity.ok().build();
     }
 }

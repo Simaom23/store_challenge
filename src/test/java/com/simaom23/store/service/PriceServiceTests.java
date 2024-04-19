@@ -1,6 +1,8 @@
 package com.simaom23.store.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -8,9 +10,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -58,6 +63,54 @@ public class PriceServiceTests {
                 // Assert
                 assertEquals(expectedResponse, out);
         }
+
+        @Test
+        public void testValidResponse() {
+                int productId = 35455;
+                int brandId = 1;
+                String dateString = "2020-06-14T10:00:00";
+                Timestamp timestamp = Timestamp.valueOf("2020-06-14 10:00:00");
+                List<Price> prices = new ArrayList<>();
+                prices.add(new Price(1, brandId, Timestamp.valueOf("2020-06-14 00:00:00"),
+                                Timestamp.valueOf("2020-12-31 23:59:59"), productId, 1, 1, new BigDecimal(35.50),
+                                "EUR"));
+                when(priceRepository.findAllEntries(productId, brandId, timestamp)).thenReturn(prices);
+
+                Optional<Response> response = priceService.checkPrice(productId, brandId, dateString);
+
+                assertTrue(response.isPresent());
+
+                Response expectedResponse = new Response(productId, brandId, 0.0f, "2020-06-14 00:00:00",
+                                "2020-12-31 23:59:59", BigDecimal.valueOf(35.50), "EUR");
+
+                assertEquals(expectedResponse, response.get());
+        }
+
+        @Test
+        public void testEmptyResult() {
+                int productId = 12345;
+                int brandId = 1;
+                String dateString = "2020-06-14T10:00:00";
+                Timestamp timestamp = Timestamp.valueOf("2020-06-14 10:00:00");
+                List<Price> prices = new ArrayList<>();
+                when(priceRepository.findAllEntries(productId, brandId, timestamp)).thenReturn(prices);
+
+                Optional<Response> response = priceService.checkPrice(productId, brandId, dateString);
+
+                assertFalse(response.isPresent());
+        }
+
+        // @Test
+        // public void testSinglePriceEntry() {
+        // List<Price> prices = new ArrayList<>();
+        // prices.add(new Price(35455, 1, Timestamp.valueOf("2020-06-14 10:00:00"),
+        // Timestamp.valueOf("2020-12-31 23:59:59"), 1, BigDecimal.valueOf(35.50),
+        // "EUR"));
+
+        // float discount = priceService.calculateDiscount(prices,
+        // BigDecimal.valueOf(35.50));
+        // assertEquals(0.0f, discount);
+        // }
 
         // Method providing test data
         static Stream<Object[]> testData() {

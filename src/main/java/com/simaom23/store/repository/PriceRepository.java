@@ -14,7 +14,7 @@ import com.simaom23.store.model.Price;
 public interface PriceRepository extends JpaRepository<Price, Integer> {
 
     // Fetch all entries with equal product id, product chain and a valid date
-    @Query("SELECT p FROM Price p WHERE p.product_id = :productId AND p.brand_id = :brandId AND p.start_date <= :date AND p.end_date >= :date ORDER BY p.priority DESC")
+    @Query("SELECT p FROM Price p WHERE p.product_id = :productId AND p.brand_id = :brandId AND p.start_date <= :date AND p.end_date >= :date ORDER BY p.priority DESC, p.price ASC")
     List<Price> findAllEntries(@Param("productId") int productId, @Param("brandId") int brandId,
             @Param("date") Timestamp date);
 

@@ -30,16 +30,18 @@ public class PriceService {
             return Optional.empty();
         }
 
-        BigDecimal highestPrice = results.get(0).getPrice();
-        float discount = calculateDiscount(results, highestPrice);
-
-        // Fetch values from the first result to create Response object
+        BigDecimal highestPriorityPrice = results.get(0).getPrice();
         String startDate = results.get(0).getStart_date().toString();
         String endDate = results.get(0).getEnd_date().toString();
         String currency = results.get(0).getCurr();
-        Response response = new Response(productId, brandId, discount, startDate, endDate, highestPrice, currency);
 
-        return Optional.ofNullable(response);
+        results.remove(0);
+        float discount = calculateDiscount(results, highestPriorityPrice);
+
+        Response response = new Response(productId, brandId, discount, startDate, endDate, highestPriorityPrice,
+                currency);
+
+        return Optional.of(response);
     }
 
     // Convert Date String to Timestamp SQL
@@ -53,10 +55,12 @@ public class PriceService {
     }
 
     // Calculate discount percentage
-    private float calculateDiscount(List<Price> results, BigDecimal highestPrice) {
-        if (results.size() > 1) {
-            BigDecimal lowestPrice = results.get(1).getPrice();
-            float discountPercentage = 100 - (highestPrice.floatValue() / lowestPrice.floatValue() * 100);
+    private float calculateDiscount(List<Price> results, BigDecimal highestPriority) {
+        if (results.size() > 0) {
+            // Array stream to get a sorted array by ascending price and extract the first
+            // Optional value from the sorted array
+            BigDecimal lowestPrice = results.stream().map(p -> p.getPrice()).sorted().findFirst().get();
+            float discountPercentage = 100.0f - (highestPriority.floatValue() / lowestPrice.floatValue() * 100.0f);
             return discountPercentage;
         }
         return 0;
