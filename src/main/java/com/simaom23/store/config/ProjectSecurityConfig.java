@@ -16,7 +16,7 @@ public class ProjectSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/price").permitAll()
+                        .requestMatchers("/check-price").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());

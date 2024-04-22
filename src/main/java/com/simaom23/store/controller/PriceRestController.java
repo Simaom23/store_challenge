@@ -19,7 +19,7 @@ public class PriceRestController {
         this.priceService = priceService;
     }
 
-    @GetMapping("/get-prices")
+    @GetMapping("/check-price")
     public ResponseEntity<Object> getPrices(@RequestParam int product_id,
             @RequestParam int brand_id, @RequestParam String date) {
         Optional<Response> response = priceService.checkPrice(product_id, brand_id, date);
