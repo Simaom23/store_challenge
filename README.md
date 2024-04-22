@@ -18,8 +18,8 @@ GET http://localhost:8080/get-prices?product_id={productId}&brand_id={brandId}&d
 
 **Replace:**
 
-- {productId} with the product ID;
-- {brandId} with the brand ID;
+- {productId} with the integer product ID;
+- {brandId} with the integer brand ID;
 - {date} with the ISO 8601 formatted date.
 
 **For example:**
@@ -36,7 +36,7 @@ The tax to be applied (whether negative or positive) is calculated between the p
 
 1. Retrieve the prices of the specified product and brand within the given time interval.
 2. Sort the retrieved prices by priority in descending order and then by price in ascending order.
-3. Calculate the discount percentage by dividing the price of the product with the highest priority and lowest price with the price of the product with the lowest price. Multiply by 100 and the total is subtracted from 100 to get the final discount percentage.
+3. Calculate the discount percentage by dividing the price of the product with the highest priority and lowest price with the price of the product with the lowest price. Multiply by 100 and the total is subtracted from 100 to get the final discount percentage. If the product with the highest priority is also the price with the lowest price we calculate the discount tax with the second lowest price.
 4. The calculated discount percentage represents the tax value to be applied.
 
 By following this approach, the tax (discount percentage) accurately reflects the difference in prices between the product with the highest priority and lowest price and the product with the lowest price within the specified time interval.
