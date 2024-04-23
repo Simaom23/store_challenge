@@ -1,5 +1,8 @@
 package com.simaom23.store.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,21 +13,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.simaom23.store.model.ErrorDetails;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 // Global Exception Handler
 @RestControllerAdvice(annotations = RestController.class)
 @Order(1)
 public class GlobalExceptionRestController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex) {
+    public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         if (ex instanceof IllegalArgumentException) {
             status = HttpStatus.BAD_REQUEST;
         }
 
+        LocalDateTime timestamp = LocalDateTime.now();
+        String formattedTimestamp = timestamp.format(DateTimeFormatter.ISO_DATE_TIME);
         String message = ex.getMessage() != null ? ex.getMessage() : status.getReasonPhrase();
-        ErrorDetails errorDetails = new ErrorDetails(status.value(), message);
-        return new ResponseEntity<>(errorDetails, status);
+        ErrorDetails errorDetails = new ErrorDetails(formattedTimestamp, status.value(), message,
+                request.getRequestURI());
+        return ResponseEntity.status(status).body(errorDetails);
     }
 }

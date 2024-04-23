@@ -23,7 +23,7 @@ public class PriceService {
     }
 
     public Optional<Response> checkPrice(int productId, int brandId, String dateString) {
-        Timestamp date = convertToDate(dateString);
+        Timestamp date = convertToTimestamp(dateString);
         List<Price> results = priceRepository.findAllEntries(productId, brandId, date);
 
         if (results.isEmpty()) {
@@ -46,7 +46,7 @@ public class PriceService {
     }
 
     // Convert Date String to Timestamp SQL
-    private Timestamp convertToDate(String dateString) {
+    private Timestamp convertToTimestamp(String dateString) {
         try {
             LocalDateTime localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             return Timestamp.valueOf(localDateTime);
