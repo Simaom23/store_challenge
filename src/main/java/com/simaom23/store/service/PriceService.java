@@ -2,16 +2,16 @@ package com.simaom23.store.service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.simaom23.store.dto.ResponseDTO;
+import com.simaom23.store.mapper.PriceMapper;
 import com.simaom23.store.model.Price;
 import com.simaom23.store.repository.PriceRepository;
+import com.simaom23.store.util.TimestampUtil;
 
 @Service
 public class PriceService {
@@ -23,36 +23,21 @@ public class PriceService {
     }
 
     public Optional<ResponseDTO> checkPrice(int productId, int brandId, String dateString) {
-        Timestamp date = convertToTimestamp(dateString);
+        Timestamp date = TimestampUtil.convertToTimestamp(dateString);
         List<Price> results = priceRepository.findAllEntries(productId, brandId, date);
 
         if (results.isEmpty()) {
             return Optional.empty();
         }
 
-        BigDecimal highestPriorityPrice = results.get(0).getPrice();
-        String startDate = results.get(0).getStart_date().toString();
-        String endDate = results.get(0).getEnd_date().toString();
-        String currency = results.get(0).getCurr();
+        Price highestPriorityPrice = results.get(0);
 
         // Exclude first from beeing sorted
         results.remove(0);
-        float discount = calculateDiscount(results, highestPriorityPrice);
+        float discount = calculateDiscount(results, highestPriorityPrice.getPrice());
 
-        ResponseDTO response = new ResponseDTO(productId, brandId, discount, startDate, endDate, highestPriorityPrice,
-                currency);
-
+        ResponseDTO response = PriceMapper.mapToResponseDTO(highestPriorityPrice, discount);
         return Optional.of(response);
-    }
-
-    // Convert Date String to Timestamp SQL
-    private Timestamp convertToTimestamp(String dateString) {
-        try {
-            LocalDateTime localDateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            return Timestamp.valueOf(localDateTime);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Date must be in the following format: YYYY-MM-DDThh:mm:ss");
-        }
     }
 
     // Calculate discount percentage

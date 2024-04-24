@@ -72,7 +72,7 @@ public class PriceServiceTests {
                 Timestamp timestamp = Timestamp.valueOf("2020-06-14 10:00:00");
                 List<Price> prices = new ArrayList<>();
                 prices.add(new Price(1, brandId, Timestamp.valueOf("2020-06-14 00:00:00"),
-                                Timestamp.valueOf("2020-12-31 23:59:59"), productId, 1, 1, new BigDecimal(35.50),
+                                Timestamp.valueOf("2020-12-31 23:59:59"), 1, productId, 1, new BigDecimal(35.50),
                                 "EUR"));
                 when(priceRepository.findAllEntries(productId, brandId, timestamp)).thenReturn(prices);
 
@@ -80,8 +80,8 @@ public class PriceServiceTests {
 
                 assertTrue(response.isPresent());
 
-                ResponseDTO expectedResponse = new ResponseDTO(productId, brandId, 0.0f, "2020-06-14 00:00:00.0",
-                                "2020-12-31 23:59:59.0", BigDecimal.valueOf(35.50), "EUR");
+                ResponseDTO expectedResponse = new ResponseDTO(productId, brandId, 0.0f, "2020-06-14 00:00:00",
+                                "2020-12-31 23:59:59", BigDecimal.valueOf(35.50), "EUR");
 
                 assertEquals(expectedResponse, response.get());
         }
@@ -109,8 +109,8 @@ public class PriceServiceTests {
                                                                 Timestamp.valueOf("2020-12-31 23:59:59"), 1,
                                                                 35455, 0, new BigDecimal(35.50), "EUR") },
                                                 35455, 1, "2020-06-14T10:00:00",
-                                                new ResponseDTO(35455, 1, 0, "2020-06-14 00:00:00.0",
-                                                                "2020-12-31 23:59:59.0",
+                                                new ResponseDTO(35455, 1, 0, "2020-06-14 00:00:00",
+                                                                "2020-12-31 23:59:59",
                                                                 new BigDecimal(35.5), "EUR")
                                 },
                                 new Object[] { // Test Case 2
@@ -126,8 +126,8 @@ public class PriceServiceTests {
                                                                                 35455, 0, new BigDecimal(35.50),
                                                                                 "EUR") },
                                                 35455, 1, "2020-06-14T16:00:00",
-                                                new ResponseDTO(35455, 1, (float) 28.30986, "2020-06-14 15:00:00.0",
-                                                                "2020-06-14 18:30:00.0",
+                                                new ResponseDTO(35455, 1, (float) 28.30986, "2020-06-14 15:00:00",
+                                                                "2020-06-14 18:30:00",
                                                                 new BigDecimal(25.45), "EUR")
                                 },
                                 new Object[] { // Test Case 3
@@ -136,8 +136,8 @@ public class PriceServiceTests {
                                                                 Timestamp.valueOf("2020-12-31 23:59:59"), 1,
                                                                 35455, 0, new BigDecimal(35.50), "EUR") },
                                                 35455, 1, "2020-06-14T21:00:00",
-                                                new ResponseDTO(35455, 1, 0, "2020-06-14 00:00:00.0",
-                                                                "2020-12-31 23:59:59.0",
+                                                new ResponseDTO(35455, 1, 0, "2020-06-14 00:00:00",
+                                                                "2020-12-31 23:59:59",
                                                                 new BigDecimal(35.50), "EUR")
                                 },
                                 new Object[] { // Test Case 4
@@ -153,8 +153,8 @@ public class PriceServiceTests {
                                                                                 35455, 0, new BigDecimal(35.50),
                                                                                 "EUR") },
                                                 35455, 1, "2020-06-15T10:00:00",
-                                                new ResponseDTO(35455, 1, (float) 14.084503, "2020-06-15 00:00:00.0",
-                                                                "2020-06-15 11:00:00.0",
+                                                new ResponseDTO(35455, 1, (float) 14.084503, "2020-06-15 00:00:00",
+                                                                "2020-06-15 11:00:00",
                                                                 new BigDecimal(30.5), "EUR")
                                 },
                                 new Object[] { // Test Case 5
@@ -170,8 +170,8 @@ public class PriceServiceTests {
                                                                                 35455, 0, new BigDecimal(35.50),
                                                                                 "EUR") },
                                                 35455, 1, "2020-06-16T21:00:00",
-                                                new ResponseDTO(35455, 1, (float) -9.7183075, "2020-06-15 16:00:00.0",
-                                                                "2020-12-31 23:59:59.0",
+                                                new ResponseDTO(35455, 1, (float) -9.7183075, "2020-06-15 16:00:00",
+                                                                "2020-12-31 23:59:59",
                                                                 new BigDecimal(38.95), "EUR")
                                 });
         }

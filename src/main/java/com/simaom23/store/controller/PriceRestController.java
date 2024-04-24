@@ -21,7 +21,7 @@ public class PriceRestController {
     }
 
     @GetMapping("/check-price")
-    @Cacheable(value = "pricesCache", key = "#product_id + '_' + #brand_id + '_' + #date")
+    @Cacheable(value = "pricesCache")
     public ResponseEntity<Object> getPrices(@RequestParam int product_id,
             @RequestParam int brand_id, @RequestParam String date) {
         Optional<ResponseDTO> response = priceService.checkPrice(product_id, brand_id, date);
