@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.simaom23.store.dto.ResponseDTO;
 import com.simaom23.store.model.Price;
-import com.simaom23.store.model.Response;
 import com.simaom23.store.repository.PriceRepository;
 
 @Service
@@ -22,7 +22,7 @@ public class PriceService {
         this.priceRepository = priceRepository;
     }
 
-    public Optional<Response> checkPrice(int productId, int brandId, String dateString) {
+    public Optional<ResponseDTO> checkPrice(int productId, int brandId, String dateString) {
         Timestamp date = convertToTimestamp(dateString);
         List<Price> results = priceRepository.findAllEntries(productId, brandId, date);
 
@@ -39,7 +39,7 @@ public class PriceService {
         results.remove(0);
         float discount = calculateDiscount(results, highestPriorityPrice);
 
-        Response response = new Response(productId, brandId, discount, startDate, endDate, highestPriorityPrice,
+        ResponseDTO response = new ResponseDTO(productId, brandId, discount, startDate, endDate, highestPriorityPrice,
                 currency);
 
         return Optional.of(response);

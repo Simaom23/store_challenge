@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.simaom23.store.model.ErrorDetails;
+import com.simaom23.store.dto.ErrorDetailsDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GlobalExceptionRestController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, HttpServletRequest request) {
+    public final ResponseEntity<ErrorDetailsDTO> handleAllExceptions(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         if (ex instanceof IllegalArgumentException) {
@@ -31,7 +31,7 @@ public class GlobalExceptionRestController extends ResponseEntityExceptionHandle
         LocalDateTime timestamp = LocalDateTime.now();
         String formattedTimestamp = timestamp.format(DateTimeFormatter.ISO_DATE_TIME);
         String message = ex.getMessage() != null ? ex.getMessage() : status.getReasonPhrase();
-        ErrorDetails errorDetails = new ErrorDetails(formattedTimestamp, status.value(), message,
+        ErrorDetailsDTO errorDetails = new ErrorDetailsDTO(formattedTimestamp, status.value(), message,
                 request.getRequestURI());
         return ResponseEntity.status(status).body(errorDetails);
     }

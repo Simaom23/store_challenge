@@ -1,4 +1,4 @@
-package com.simaom23.store.model;
+package com.simaom23.store.dto;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class ResponseDTO {
     private int product_id;
     private int brand_id;
     private float discount_percentage;
