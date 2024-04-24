@@ -10,7 +10,7 @@ To run the project using Maven, you can use the following command:
 
 ## Making Get Request to Prices
 
-Here's how you can make requests to the specified endpoint with the provided query parameters:
+Here's how you can make requests to the specified endpoint with the provided query parameters, assuming you are running the project locally:
 
 ```
 GET http://localhost:8080/check-price?product_id={productId}&brand_id={brandId}&date={date}
